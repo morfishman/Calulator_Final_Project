@@ -1,3 +1,4 @@
+import math
 class GenericIdentifier:
 
     def __init__(self, value: str,priority: int):
@@ -51,8 +52,17 @@ class UnaryMinus(GenericIdentifier):
         """
         :param param:
         :return: flip the sign of a float param
+        :raise OverflowError
         """
-        return 0.0-param
+
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param<=float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
+        returnal = 0.0-param
+        if type(returnal) != float:
+            raise OverflowError(f"Max Num Exided from {-param}")
+        return returnal
 
 
 
@@ -67,10 +77,40 @@ class MaxUnaryMinus(GenericIdentifier):
         """
         :param param:
         :return: flip the sign of a float param
+        :raise OverflowError
         """
-        return 0.0-param
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param<=float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
+        returnal = 0.0 - param
+        if type(returnal) != float:
+            raise OverflowError(f"Max Num Exided from {-param}")
+        return returnal
 
 
+
+class Int(GenericIdentifier):
+    def __init__(self):
+        """
+        :returns new Int Operator
+        """
+        super().__init__('int',6)
+        self.unary = True
+    def calc(self,param:float) -> float:
+        """
+        :param param:
+        :return: remove the digits after the point
+        :raise OverflowError
+        """
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param<=float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
+        returnal = float(int(param))
+        if type(returnal) != float:
+            raise OverflowError(f"Max Num Exided from {-param}")
+        return returnal
 
 class Tilda(GenericIdentifier):
     def __init__(self):
@@ -83,8 +123,16 @@ class Tilda(GenericIdentifier):
         """
         :param param:
         :return: flip the sign of a float param
+        :raise OverflowError
         """
-        return 0.0-param
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param<=float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
+        returnal = 0.0 - param
+        if type(returnal) != float:
+            raise OverflowError(f"Max Num Exided from {-param}")
+        return returnal
 
 class Atzeret(GenericIdentifier):
     def __init__(self):
@@ -99,13 +147,59 @@ class Atzeret(GenericIdentifier):
         :param param: float number
         :return: the value of the factorial of the param
         :raise ArithmeticError
+        :raise OverflowError
         """
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param <= float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
         if int(param) < 0:
             raise ArithmeticError(f"factorial of a negative param: {param}!")
+        if param*10%10 != 0:
+            raise ArithmeticError(f"factorial of a uncomplete param: {param}!")
         if int(param)  == 0:
-            return 1;
-        return float(self.calc(param-1) * param)
+            return float(1)
+        sum = 1
+        for i in range(1,int(param)+1):
+            sum *= float(i)
+            round(sum,10)
+            if type(sum) != float or (sum >= float('inf') or sum <= float('-inf')):
+                raise OverflowError(f"Max Num Exided from {param}!")
+        return sum
 
+
+
+class Hash(GenericIdentifier):
+    def __init__(self):
+        """
+        :returns new Hash Operator
+        """
+        super().__init__('#',6)
+        self.unary = True
+
+    def calc(self,param:float) -> float:
+        """
+        :param param: float number
+        :return: the value of the hash of the param
+        :raise ArithmeticError
+        :raise OverflowError
+        """
+        if type(param) != float:
+            raise OverflowError(f"Max Num Exided from {param}")
+        if param >= float('inf') or param <= float('-inf'):
+            raise OverflowError(f"Max Num Exided from {param}")
+        if int(param) < 0:
+            raise ArithmeticError(f"hash of a negative param: {param}#")
+
+        if param == 0:
+            return float(1)
+        sum = 0
+        param *= 10**10
+        param = int(param)
+        while param > 0:
+            sum += param % 10
+            param = int(param/10)
+        return float(sum)
 
 class Minus(GenericIdentifier):
     """
@@ -120,7 +214,15 @@ class Minus(GenericIdentifier):
         :param p1: operand float
         :param p2:  operand float
         :return: operand -operand
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+
         return p1 - p2
 
 
@@ -138,7 +240,15 @@ class Plus(GenericIdentifier):
         :param p1: operand float
         :param p2:  operand float
         :return: operand + operand
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+
         return p1 + p2
 
 class Mul(GenericIdentifier):
@@ -154,9 +264,18 @@ class Mul(GenericIdentifier):
         :param p1: operand float
         :param p2:  operand float
         :return: operand * operand
+        :raise OverflowError
         """
-        return p1 * p2
-
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+        returnal = p1 * p2
+        if type(returnal) != float or not float('-inf') < returnal < float('inf'):
+            raise OverflowError(f"Max Num Exided from {p1}*{p2}")
+        return returnal
 
 class Div(GenericIdentifier):
     def __init__(self):
@@ -173,10 +292,20 @@ class Div(GenericIdentifier):
         :param p2:  operand float
         :return: operand / operand
         :raise ZeroDivisionError
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
         if p1 == 0:
-            raise ZeroDivisionError
-        return p1 / p2
+            raise ZeroDivisionError("Cant divide by zero")
+        returnal = p1 / p2
+        if type(returnal) != float or not float('-inf') < returnal < float('inf'):
+            raise OverflowError(f"Max Num Exided from {p1}/{p2}")
+        return returnal
 
 class Min(GenericIdentifier):
     def __init__(self):
@@ -191,7 +320,14 @@ class Min(GenericIdentifier):
         :param p1: operand
         :param p2: operand
         :return: the lowest value between them
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
         return min(p1 ,p2)
 
 class Power(GenericIdentifier):
@@ -208,10 +344,26 @@ class Power(GenericIdentifier):
         :param p2: operand
         :return: p1 ^ p2
         :raise ZeroDivisionError
+        :raise ArithmeticError
+        :raise OverflowError
         """
-        if p1 == 0 and p2 < 0:
-            raise ZeroDivisionError
-        return p1**p2
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+        if p1 == 0  and p2 < 0:
+            raise ZeroDivisionError(f"cant devide by zero {p1}^{p2} = {p1}/{p2}")
+        if p1<0 and p2*10%10 != 0:
+            raise ArithmeticError(f"sqrt of negative number {p1}^{p2}")
+        try:
+            returnal = math.pow(p1,p2)
+        except OverflowError as e:
+            raise OverflowError(f"Max Num Exided from {p1}^{p2}")
+        if type(returnal) != float or not float('-inf') < returnal < float('inf') :
+            raise OverflowError(f"Max Num Exided from {p1}^{p2}")
+        return returnal
 
 
 class Avg(GenericIdentifier):
@@ -228,8 +380,18 @@ class Avg(GenericIdentifier):
         :param p1: Operand
         :param p2: Operand
         :return: the avarage between the 2 operands
+        :raise OverflowError
         """
-        return (p1 + p2) / 2.0
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+        returnal = (p1 + p2) / 2.0
+        if not float('-inf') < returnal < float('inf'):
+            raise OverflowError(f"Max Num Exided")
+        return returnal
 
 class Max(GenericIdentifier):
     def __init__(self):
@@ -244,7 +406,14 @@ class Max(GenericIdentifier):
         :param p1: Operand
         :param p2: Operand
         :return: Maximum Value Between the Operand
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
         return max(p1,p2)
 
 class Mod(GenericIdentifier):
@@ -261,7 +430,17 @@ class Mod(GenericIdentifier):
         :param p2: Operand
         :return Operand % Operand
         :raise ZeroDivisionError
+        :raise OverflowError
         """
+        if type(p1) != float:
+            raise OverflowError(f"Max Num Exided from {p1}")
+        if type(p2) != float:
+            raise OverflowError(f"Max Num Exided from {p2}")
+        if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
+            raise OverflowError(f"Max Num Exided")
         if p2 ==0:
-            raise ZeroDivisionError
-        return p1%p2
+            raise ZeroDivisionError("cant divide by zero")
+        returnal = p1 % p2
+        if type(returnal) != float or not float('-inf') < returnal < float('inf') :
+            raise OverflowError(f"Max Num Exided from {p1}%{p2}")
+        return returnal

@@ -1,5 +1,41 @@
 from src.TransitionKind import TransitionKind
 from Operators_Claster import *
+
+
+def is_space(char: str):
+    """
+
+    :param char:
+    :return: if the char is kindof a space a space
+    """
+    return char == ' 'or char == '\t' or char == '\r'
+
+def is_i(char:str):
+    """
+
+    :param char:
+    :return: if is it a 'i'
+    """
+    return char == 'i'
+
+
+def is_n(char: str):
+    """
+
+    :param char:
+    :return: if is it a 'n'
+    """
+    return char == 'n'
+
+
+def is_t(char: str):
+    """
+
+    :param char:
+    :return: if is it a 't'
+    """
+    return char == 't'
+
 def is_minus(char:str):
     """
 
@@ -7,7 +43,6 @@ def is_minus(char:str):
     :return: if it is a -
     """
     return char == '-'
-
 def is_plus(char:str):
     """
 
@@ -120,6 +155,14 @@ def is_mod(char:str):
     """
     return char == '%'
 
+def is_hash(char:str):
+    """
+
+    :param char:
+    :return: if it is a #
+    """
+    return char == '#'
+
 def defult(char:str):
     """
 
@@ -156,18 +199,49 @@ class FsmTable:
         self._transitions[TransitionKind.START] =\
         {
 
-            is_minus:[TransitionKind.UNARY_MINUS,None,UnaryMinus],
-            is_digit:[TransitionKind.DECIMAL,add_to_buffer],
+            is_minus:[TransitionKind.UNARY_MINUS_FIRST_SIC, None, UnaryMinus],# ________minus
+            is_digit:[TransitionKind.DECIMAL,add_to_buffer,None],
+            #point-
+            is_point:[TransitionKind.AFTER_POINT,add_to_buffer,None],
+            #Int - I
+            is_i:[TransitionKind.INT_I],
             is_l_braket:[TransitionKind.L_BRAKET,None,LBraket],
             is_tilda:[TransitionKind.UNARY_R_OPERATOR,None,Tilda], #---------
+            defult: [TransitionKind.BAD_INPUT],
+        }
+        self._transitions[TransitionKind.UNARY_MINUS_FIRST_SIC] = \
+        {
+            is_i: [TransitionKind.INT_I],
+            is_minus: [TransitionKind.UNARY_MINUS_FIRST_SIC, None, UnaryMinus],
+            is_digit: [TransitionKind.DECIMAL, add_to_buffer, None],
+            is_l_braket: [TransitionKind.L_BRAKET, None, LBraket],
+            is_point: [TransitionKind.AFTER_POINT, add_to_buffer, None],
+            is_space: [TransitionKind.UNARY_MINUS],  # space
+            defult: [TransitionKind.BAD_INPUT],
+        }
+        self._transitions[TransitionKind.INT_I] = \
+        {
+            is_n: [TransitionKind.INT_N],
+            defult: [TransitionKind.BAD_INPUT],
+        }
+        self._transitions[TransitionKind.INT_N] = \
+        {
+            is_t: [TransitionKind.INT_T,None,Int],
+            defult: [TransitionKind.BAD_INPUT],
+        }
+        self._transitions[TransitionKind.INT_T] = \
+        {
+            is_l_braket: [TransitionKind.L_BRAKET,None,LBraket],
+            is_space: [TransitionKind.INT_T],#space
             defult: [TransitionKind.BAD_INPUT],
         }
         # only number or operator unary_left                *****
         self._transitions[TransitionKind.DECIMAL] = \
         {
             is_atzeret:[TransitionKind.UNARY_L_OPERATOR,from_str_to_num,Atzeret], #---------
+            is_hash:[TransitionKind.UNARY_L_OPERATOR,from_str_to_num,Hash], #---------
             is_digit: [TransitionKind.DECIMAL,add_to_buffer,None],
-            is_point: [TransitionKind.AFTER_POINT,add_to_buffer,None],
+            is_point: [TransitionKind.AFTER_POINT_NUMBER,add_to_buffer,None],
             is_r_braket: [TransitionKind.R_BRAKET,from_str_to_num,RBraket],
             is_plus: [TransitionKind.BINARY_OPERATOR,from_str_to_num,Plus],
             is_mod:[TransitionKind.BINARY_OPERATOR,from_str_to_num,Mod],
@@ -178,18 +252,38 @@ class FsmTable:
             is_min: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Min],
             is_mul: [TransitionKind.BINARY_OPERATOR,from_str_to_num,Mul],
             is_div: [TransitionKind.BINARY_OPERATOR,from_str_to_num,Div],
+            is_space: [TransitionKind.SPACE, from_str_to_num, None],  # space
             defult: [TransitionKind.BAD_INPUT],
         }
-        # only number                                       *****
+        self._transitions[TransitionKind.AFTER_POINT_NUMBER]= \
+        {
+            is_digit: [TransitionKind.FLOAT, add_to_buffer, None],
+            is_r_braket: [TransitionKind.R_BRAKET, from_str_to_num, RBraket],
+            is_plus: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Plus],
+            is_mod: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Mod],
+            is_max: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Max],
+            is_avg: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Avg],
+            is_power: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Power],
+            is_minus: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Minus],
+            is_min: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Min],
+            is_mul: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Mul],
+            is_div: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Div],
+            is_atzeret: [TransitionKind.UNARY_L_OPERATOR, from_str_to_num, Atzeret],  # ---------
+            is_hash: [TransitionKind.UNARY_L_OPERATOR, from_str_to_num, Hash],  # ---------
+            is_space: [TransitionKind.SPACE, from_str_to_num, None],  # space
+            defult: [TransitionKind.BAD_INPUT]
+        }
+        # only number
         self._transitions[TransitionKind.AFTER_POINT] = \
         {
-            is_digit:[TransitionKind.FLOAT,add_to_buffer,None],
+            is_digit: [TransitionKind.FLOAT, add_to_buffer, None],
             defult:[TransitionKind.BAD_INPUT]
         }
         # only number or operator, unary_left               *****
         self._transitions[TransitionKind.FLOAT] = \
         {
             is_atzeret: [TransitionKind.UNARY_L_OPERATOR, from_str_to_num, Atzeret],  # ---------
+            is_hash: [TransitionKind.UNARY_L_OPERATOR, from_str_to_num, Hash],  # ---------
             is_digit: [TransitionKind.FLOAT,add_to_buffer,None],
             is_r_braket: [TransitionKind.R_BRAKET,from_str_to_num,RBraket],
             is_plus: [TransitionKind.BINARY_OPERATOR,from_str_to_num,Plus],
@@ -201,38 +295,68 @@ class FsmTable:
             is_max: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Max],
             is_avg: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Avg],
             is_power: [TransitionKind.BINARY_OPERATOR, from_str_to_num, Power],
+            is_space: [TransitionKind.SPACE,from_str_to_num,None],  # space
+            defult: [TransitionKind.BAD_INPUT],
+        }
+
+        self._transitions[TransitionKind.SPACE] = \
+        {
+            is_atzeret: [TransitionKind.UNARY_L_OPERATOR, None, Atzeret],  # ---------
+            is_hash: [TransitionKind.UNARY_L_OPERATOR, None, Hash],  # ---------
+            is_r_braket: [TransitionKind.R_BRAKET, None, RBraket],
+            is_plus: [TransitionKind.BINARY_OPERATOR, None, Plus],
+            is_minus: [TransitionKind.BINARY_OPERATOR, None, Minus],
+            is_min: [TransitionKind.BINARY_OPERATOR, None, Min],
+            is_mul: [TransitionKind.BINARY_OPERATOR, None, Mul],
+            is_div: [TransitionKind.BINARY_OPERATOR, None, Div],
+            is_mod: [TransitionKind.BINARY_OPERATOR, None, Mod],
+            is_max: [TransitionKind.BINARY_OPERATOR, None, Max],
+            is_avg: [TransitionKind.BINARY_OPERATOR, None, Avg],
+            is_power: [TransitionKind.BINARY_OPERATOR, None, Power],
+            is_space: [TransitionKind.SPACE],  # space
             defult: [TransitionKind.BAD_INPUT],
         }
         #only number or ( or unary_right
         self._transitions[TransitionKind.BINARY_OPERATOR] =\
         {
             is_digit: [TransitionKind.DECIMAL,add_to_buffer,None],
+            is_i: [TransitionKind.INT_I],
             is_l_braket: [TransitionKind.L_BRAKET,None,LBraket],
             is_minus: [TransitionKind.UNARY_MINUS,None,MaxUnaryMinus],
             is_tilda: [TransitionKind.UNARY_R_OPERATOR, None, Tilda],  # ---------
+            is_point: [TransitionKind.AFTER_POINT,add_to_buffer,None],
+            is_space: [TransitionKind.BINARY_OPERATOR],  # space
             defult: [TransitionKind.BAD_INPUT]
         }
         #only numbers and unary_right and (
         self._transitions[TransitionKind.L_BRAKET] = \
         {
+            is_point: [TransitionKind.AFTER_POINT, add_to_buffer, None],
+            is_i: [TransitionKind.INT_I],
             is_digit:[TransitionKind.DECIMAL,add_to_buffer,None],
-            is_minus:[TransitionKind.UNARY_MINUS,None,MaxUnaryMinus],
+            is_minus:[TransitionKind.UNARY_MINUS_FIRST_SIC,None,UnaryMinus],
             is_l_braket: [TransitionKind.L_BRAKET,None,LBraket],
             is_tilda: [TransitionKind.UNARY_R_OPERATOR, None, Tilda],  # ---------
+            is_point: [TransitionKind.AFTER_POINT, add_to_buffer, None],
+            is_space: [TransitionKind.L_BRAKET],  # space
             defult: [TransitionKind.BAD_INPUT]
         }
         #only unary_minus,number,(
         self._transitions[TransitionKind.UNARY_MINUS] = \
         {
-            is_minus: [TransitionKind.UNARY_MINUS,None,MaxUnaryMinus],
+            is_i: [TransitionKind.INT_I],
+            is_minus: [TransitionKind.UNARY_MINUS,None,MaxUnaryMinus],#________minus
             is_digit: [TransitionKind.DECIMAL,add_to_buffer,None],
             is_l_braket: [TransitionKind.L_BRAKET,None,LBraket],
+            is_point: [TransitionKind.AFTER_POINT, add_to_buffer, None],
+            is_space: [TransitionKind.UNARY_MINUS],  # space
             defult: [TransitionKind.BAD_INPUT],
         }
         #only unary_left, operator, )                       *****
         self._transitions[TransitionKind.R_BRAKET] = \
         {
             is_atzeret: [TransitionKind.UNARY_L_OPERATOR, None, Atzeret],  # ---------
+            is_hash: [TransitionKind.UNARY_L_OPERATOR, None, Hash],  # ---------
             is_r_braket: [TransitionKind.R_BRAKET,None,RBraket],
             is_plus: [TransitionKind.BINARY_OPERATOR,None,Plus],
             is_minus: [TransitionKind.BINARY_OPERATOR,None,Minus],
@@ -243,20 +367,25 @@ class FsmTable:
             is_max: [TransitionKind.BINARY_OPERATOR, None, Max],
             is_avg: [TransitionKind.BINARY_OPERATOR, None, Avg],
             is_power: [TransitionKind.BINARY_OPERATOR, None, Power],
+            is_space: [TransitionKind.R_BRAKET],  # space
             defult: [TransitionKind.BAD_INPUT]
         }
         #only unary_minus, (, number
         self._transitions[TransitionKind.UNARY_R_OPERATOR] = \
         {
+            is_i: [TransitionKind.INT_I],
             is_minus: [TransitionKind.UNARY_MINUS, None, MaxUnaryMinus],
             is_digit: [TransitionKind.DECIMAL, add_to_buffer, None],
+            is_point: [TransitionKind.AFTER_POINT, add_to_buffer, None],
             is_l_braket: [TransitionKind.L_BRAKET, None, LBraket],
+            is_space: [TransitionKind.UNARY_R_OPERATOR],  # space
             defult: [TransitionKind.BAD_INPUT]
         }
         #binary operator,),unary_left                        *****
         self._transitions[TransitionKind.UNARY_L_OPERATOR] = \
         {
             is_atzeret: [TransitionKind.UNARY_L_OPERATOR, None, Atzeret],  # ---------
+            is_hash: [TransitionKind.UNARY_L_OPERATOR, None, Hash],  # ---------
             is_r_braket: [TransitionKind.R_BRAKET, None, RBraket],
             is_plus: [TransitionKind.BINARY_OPERATOR, None, Plus],
             is_minus: [TransitionKind.BINARY_OPERATOR, None, Minus],
@@ -267,6 +396,7 @@ class FsmTable:
             is_max: [TransitionKind.BINARY_OPERATOR, None, Max],
             is_avg: [TransitionKind.BINARY_OPERATOR, None, Avg],
             is_power: [TransitionKind.BINARY_OPERATOR, None, Power],
+            is_space: [TransitionKind.UNARY_L_OPERATOR],  # space
             defult: [TransitionKind.BAD_INPUT]
         }
 
@@ -275,12 +405,17 @@ class FsmTable:
             TransitionKind.UNARY_R_OPERATOR: False,
             TransitionKind.R_BRAKET:True,
             TransitionKind.UNARY_MINUS:False,
+            TransitionKind.UNARY_MINUS_FIRST_SIC:False,
             TransitionKind.L_BRAKET:False,
             TransitionKind.BINARY_OPERATOR:False,
             TransitionKind.FLOAT: True,
-            TransitionKind.AFTER_POINT:True,
+            TransitionKind.AFTER_POINT:False,
             TransitionKind.DECIMAL: True,
-            TransitionKind.START: True
+            TransitionKind.START: True,
+            TransitionKind.AFTER_POINT_NUMBER: True,
+            TransitionKind.INT_I: False,
+            TransitionKind.INT_N: False,
+            TransitionKind.INT_T: False,
+            TransitionKind.SPACE: True,
+
         }
-
-

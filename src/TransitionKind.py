@@ -15,6 +15,12 @@ class TransitionKind(Enum):
     BAD_INPUT =8
     FLOAT = 9
     AFTER_POINT = 10
+    AFTER_POINT_NUMBER = 11
+    INT_I = 12
+    INT_N = 13
+    INT_T = 14
+    SPACE = 15
+    UNARY_MINUS_FIRST_SIC = 16
 
 
 
