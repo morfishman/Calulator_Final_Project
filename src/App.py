@@ -16,30 +16,31 @@ def calc_postfix_expretion(expretion: str):
                 stack_of_operands.append(round(element.calc(p1, p2), 10))
     return stack_of_operands
 expression = ""
-while expression != "exit":
-    try:
-        expression = input()
-        if expression == "":
-            print("nothing mate :)")
-        else:
-            elementa = Parser(expression)
-            elementa.calc_postfix()
-            print(calc_postfix_expretion(elementa.final_expo)[0])
+try:
+    while expression != "exit":
+        try:
+            expression = input()
+            if expression == "":
+                print("nothing mate :)")
+            else:
+                elementa = Parser(expression)
+                elementa.calc_postfix()
+                print(calc_postfix_expretion(elementa.final_expo)[0])
 
-    except SyntaxExpretionExeption as e:
-        print("SyntaxError at this element:", expression[e.index])
-    except ArithmeticError as e:
-        print(e)
-    except KeyboardInterrupt as e:
-        print("stoping")
-    except EOFError as e:
-        print("stoping")
-    except ZeroDivisionError as e:
-        print(e)
-    except IndexError as e:
-        print(e)
-    except OverflowError as e:
-        print(e)
+        except SyntaxExpretionExeption as e:
+            print("SyntaxError at this element:", expression[e.index])
+        except ArithmeticError as e:
+            print(e)
+        except ZeroDivisionError as e:
+            print(e)
+        except IndexError as e:
+            print(e)
+        except OverflowError as e:
+            print(e)
+except KeyboardInterrupt as e:
+    print("stoping")
+except EOFError as e:
+    print("stoping")
 
 
 
