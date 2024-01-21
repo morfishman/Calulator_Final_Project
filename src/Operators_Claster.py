@@ -46,7 +46,7 @@ class UnaryMinus(GenericIdentifier):
         """
         :returns new Minus Unary Operator (when the minus is not after operator)
         """
-        super().__init__('-',3.5)
+        super().__init__('-', 3.5)
         self.unary = True
     def calc(self,param:float) -> float:
         """
@@ -142,7 +142,7 @@ class Atzeret(GenericIdentifier):
         super().__init__('!',6)
         self.unary = True
 
-    def calc(self,param:float) -> float:
+    def calc(self, param:float) -> float:
         """
         :param param: float number
         :return: the value of the factorial of the param
@@ -160,9 +160,9 @@ class Atzeret(GenericIdentifier):
         if int(param)  == 0:
             return float(1)
         sum = 1
-        for i in range(1,int(param)+1):
+        for i in range(1, int(param)+1):
             sum *= float(i)
-            round(sum,10)
+            round(sum, 10)
             if type(sum) != float or (sum >= float('inf') or sum <= float('-inf')):
                 raise OverflowError(f"Max Num Exided from {param}!")
         return sum
@@ -177,29 +177,28 @@ class Hash(GenericIdentifier):
         super().__init__('#',6)
         self.unary = True
 
-    def calc(self,param:float) -> float:
+    def calc(self, param:float) -> float:
+
         """
         :param param: float number
         :return: the value of the hash of the param
         :raise ArithmeticError
         :raise OverflowError
         """
+
         if type(param) != float:
             raise OverflowError(f"Max Num Exided from {param}")
         if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"Max Num Exided from {param}")
-        if int(param) < 0:
+        if param < 0:
             raise ArithmeticError(f"hash of a negative param: {param}#")
-
         if param == 0:
-            return float(1)
-        sum = 0
-        param *= 10**10
-        param = int(param)
-        while param > 0:
-            sum += param % 10
-            param = int(param/10)
-        return float(sum)
+            return 0
+        if param >= float('inf') or  param <= float('-inf'):
+            raise OverflowError(f"hash too large param: inf#")
+        list_operand = list(str(param))
+        return sum(float(char) for char in list_operand if char.isnumeric())
+
 
 class Minus(GenericIdentifier):
     """
