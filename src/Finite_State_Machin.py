@@ -220,8 +220,6 @@ def from_str_to_num(buffer: str, marsh=2):
     """
     if marsh:
         pass
-    if buffer[0] == '0':
-        raise ArithmeticError(f"Unsupported number: {buffer}")
     return float(buffer)
 
 
