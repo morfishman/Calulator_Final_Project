@@ -1,8 +1,9 @@
 from enum import Enum
 
+
 class TransitionKind(Enum):
     """
-    :type: an enum that represrnt the state of the machine
+    :type: an enum that represent the state of the machine
     """
     START = 0
     DECIMAL = 1
@@ -12,7 +13,7 @@ class TransitionKind(Enum):
     BINARY_OPERATOR = 5
     L_BRAKET = 6
     R_BRAKET = 7
-    BAD_INPUT =8
+    BAD_INPUT = 8
     FLOAT = 9
     AFTER_POINT = 10
     AFTER_POINT_NUMBER = 11
@@ -24,6 +25,3 @@ class TransitionKind(Enum):
     E_NUMBER = 17
     E_NUMBER_OPERATOR = 18
     E_NUMBER_OPERATOR_NUMBER = 19
-
-
-

@@ -5,14 +5,14 @@ class Parser:
     def __init__(self, expression: str):
         """
         :param expression: User Expression
-        :returns new Object that by using Lexer can lex , And Pars this expression to a Postfix Expretion
-        :raise SyntaxExpretionExeption
+        :returns new Object that by using Lexer can lex , And Pars this expression to a Postfix Expression
+        :raise SyntaxExpressionException
         """
-        self.lexerment = Lexer(expression)
+        self.lexer_obj = Lexer(expression)
         for i in range(len(expression)):
-            self.lexerment.next()
-        if not (self.lexerment.accept_state[self.lexerment.current_state]):
-            raise SyntaxExpretionExeption(self.lexerment.index - 1)
+            self.lexer_obj.next()
+        if not (self.lexer_obj.accept_state[self.lexer_obj.current_state]):
+            raise SyntaxExpressionException(self.lexer_obj.index - 1)
         self.final_expo = []
 
     def calc_postfix(self):
@@ -21,40 +21,40 @@ class Parser:
         :raise: ArithmeticError
         """
         operators_stack = []
-        for element in self.lexerment.final_expression:
-            if type(element) == float:
+        for element in self.lexer_obj.final_expression:
+            if float == type(element):
                 self.final_expo.append(element)
             else:
-                if isinstance(element, Braket) and element.side == 0:
+                if isinstance(element, Bracket) and element.side == 0:
                     operators_stack.append(element)
-                elif isinstance(element, Braket) and element.side == 1:
+                elif isinstance(element, Bracket) and element.side == 1:
                     while operators_stack != [] and not (operators_stack[len(operators_stack) - 1]).value == '(':
                         self.final_expo.append(operators_stack.pop())
                     if operators_stack == [] or not (operators_stack[len(operators_stack) - 1]).value == '(':
                         raise ArithmeticError(
-                            "Not Valid Use Of Brakets: missing '(' ")  # make it more castume exeption :)
+                            "Not Valid Use Of Brackets: missing '(' ")  # make it more costume exception :)
                     operators_stack.pop()
-                elif operators_stack == []:
+                elif not operators_stack:
                     operators_stack.append(element)
                 else:
-                    if (element).unary and (isinstance(element, UnaryMinus) or isinstance(element, MaxUnaryMinus)):
-                        if (operators_stack[len(operators_stack) - 1]).priority <= (element).priority:
+                    if element.unary and (isinstance(element, UnaryMinus) or isinstance(element, MaxUnaryMinus)):
+                        if (operators_stack[len(operators_stack) - 1]).priority <= element.priority:
                             operators_stack.append(element)
                         else:
                             while operators_stack != [] and not (
-                                    (operators_stack[len(operators_stack) - 1]).priority <= (element).priority):
+                                    (operators_stack[len(operators_stack) - 1]).priority <= element.priority):
                                 self.final_expo.append(operators_stack.pop())
                             operators_stack.append(element)
                     else:
-                        if (operators_stack[len(operators_stack) - 1]).priority < (element).priority:
+                        if (operators_stack[len(operators_stack) - 1]).priority < element.priority:
                             operators_stack.append(element)
                         else:
                             while operators_stack != [] and not (
-                                    (operators_stack[len(operators_stack) - 1]).priority < (element).priority):
+                                    (operators_stack[len(operators_stack) - 1]).priority < element.priority):
                                 self.final_expo.append(operators_stack.pop())
                             operators_stack.append(element)
-        while operators_stack != []:
+        while operators_stack:
             operator = operators_stack.pop()
-            if isinstance(operator, Braket):
-                raise ArithmeticError("Not Valid Use Of Brakets: missing ')' ")  # make it more castume exeption :)
+            if isinstance(operator, Bracket):
+                raise ArithmeticError("Not Valid Use Of Brackets: missing ')' ")  # make it more costume exception :)
             self.final_expo.append(operator)

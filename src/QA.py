@@ -2,11 +2,10 @@ from Parser import *
 import pytest
 
 
-
-def calc_postfix_expretion(expretion: str):
+def calc_postfix_expression(expression: str):
     stack_of_operands = []
-    for element in expretion:
-        if not isinstance(element,GenericIdentifier):
+    for element in expression:
+        if not isinstance(element, GenericIdentifier):
             stack_of_operands.append(element)
         else:
             if element.unary:
@@ -16,30 +15,34 @@ def calc_postfix_expretion(expretion: str):
                 p1 = stack_of_operands.pop()
                 stack_of_operands.append(round(element.calc(p1, p2), 10))
     return stack_of_operands
+
+
 def for_pytest(input_ex: str):
+    element = ""
+    expression = ""
     try:
         expression = input_ex
         if expression == "":
             print("nothing mate :)")
         else:
-            elementa = Parser(expression)
-            elementa.calc_postfix()
-            print(calc_postfix_expretion(elementa.final_expo)[0])
-        return calc_postfix_expretion(elementa.final_expo)[0]
+            element = Parser(expression)
+            element.calc_postfix()
+            print(calc_postfix_expression(element.final_expo)[0])
+        return calc_postfix_expression(element.final_expo)[0]
 
-    except SyntaxExpretionExeption as e:
+    except SyntaxExpressionException as e:
         print("SyntaxError at this element:", expression[e.index])
-    except ArithmeticError as e:
-        print(e)
-    except KeyboardInterrupt as e:
-        print("stoping")
-    except EOFError as e:
-        print("stoping")
     except ZeroDivisionError as e:
         print(e)
-    except IndexError as e:
-        print(e)
     except OverflowError as e:
+        print(e)
+    except ArithmeticError as e:
+        print(e)
+    except KeyboardInterrupt:
+        print("stopping")
+    except EOFError:
+        print("stopping")
+    except IndexError as e:
         print(e)
 
 
@@ -64,12 +67,11 @@ expressions = [
     ("(2+3)*(4-1)+(8/2)", 19.0),
     ("4*(7-3)-2%3+6$2", 20.0),
     ("1+2^3*4-(8%3@2)", 32.5),
-    ("((((((((~-3!!^~-3!)#/5) ^ 100)#!#) + ~-(5&2$4)!#)%7 / 10 ) ^ 2 * 1000) % 3)! + ~-------((((((((~-3!!^~-3!)#/5) ^ 100)#!#) + ~-(5&2$4)!#)%7 / 10 ) ^ 2 * 1000) %  3)!", 2.0)
+    ("((((((((~-3!!^~-3!)#/5) ^ 100)#!#) + ~-(5&2$4)!#)%7 / 10 ) ^ 2 * 1000) % 3)! + ~-------((((((((~-3!!^~-3!)#/5) ^"
+     " 100)#!#) + ~-(5&2$4)!#)%7 / 10 ) ^ 2 * 1000) %  3)!", 2.0)
 ]
 
 
-@pytest.mark.parametrize("_input, result",expressions)
-
+@pytest.mark.parametrize("_input, result", expressions)
 def test_mytest(_input, result):
     assert for_pytest(_input) == result
-

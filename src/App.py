@@ -1,11 +1,10 @@
 from Parser import *
 
 
-
-def calc_postfix_expretion(expretion: str):
+def calc_postfix_expression(expiration: str):
     stack_of_operands = []
-    for element in expretion:
-        if not isinstance(element,GenericIdentifier):
+    for element in expiration:
+        if not isinstance(element, GenericIdentifier):
             stack_of_operands.append(element)
         else:
             if element.unary:
@@ -15,6 +14,8 @@ def calc_postfix_expretion(expretion: str):
                 p1 = stack_of_operands.pop()
                 stack_of_operands.append(round(element.calc(p1, p2), 10))
     return stack_of_operands
+
+
 expression = ""
 try:
     while expression != "exit":
@@ -23,24 +24,21 @@ try:
             if expression == "":
                 print("nothing mate :)")
             else:
-                elementa = Parser(expression)
-                elementa.calc_postfix()
-                print(calc_postfix_expretion(elementa.final_expo)[0])
+                element_lex = Parser(expression)
+                element_lex.calc_postfix()
+                print(calc_postfix_expression(element_lex.final_expo)[0])
 
-        except SyntaxExpretionExeption as e:
+        except SyntaxExpressionException as e:
             print("SyntaxError at this element:", expression[e.index])
-        except ArithmeticError as e:
-            print(e)
         except ZeroDivisionError as e:
-            print(e)
-        except IndexError as e:
             print(e)
         except OverflowError as e:
             print(e)
+        except ArithmeticError as e:
+            print(e)
+        except IndexError as e:
+            print(e)
 except KeyboardInterrupt as e:
-    print("stoping")
+    print("stopping")
 except EOFError as e:
-    print("stoping")
-
-
-
+    print("stopping")
