@@ -17,27 +17,26 @@ def calc_postfix_expression(expiration: str):
 
 
 expression = ""
-try:
-    while expression != "exit":
-        try:
-            expression = input()
-            if expression == "":
-                print("nothing mate :)")
-            else:
-                element_lex = Parser(expression)
-                element_lex.calc_postfix()
-                print(calc_postfix_expression(element_lex.final_expo)[0])
 
-        except SyntaxExpressionException as e:
-            print("SyntaxError at this element:", expression[e.index])
-        except ZeroDivisionError as e:
-            print(e)
-        except OverflowError as e:
-            print(e)
-        except ArithmeticError as e:
-            print(e)
-        except IndexError as e:
-            print(e)
+try:
+    expression = input()
+    if expression == "":
+        print("nothing mate :)")
+    else:
+        element_lex = Parser(expression)
+        element_lex.calc_postfix()
+        print(calc_postfix_expression(element_lex.final_expo)[0])
+
+except SyntaxExpressionException as e:
+    print("SyntaxError at this element:", expression[e.index])
+except ZeroDivisionError as e:
+    print(e)
+except OverflowError as e:
+    print(e)
+except ArithmeticError as e:
+    print(e)
+except IndexError as e:
+    print(e)
 except KeyboardInterrupt as e:
     print("stopping")
 except EOFError as e:
