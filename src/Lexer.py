@@ -41,6 +41,8 @@ class Lexer(FsmTable):
                             self.final_expression.append(self.buffer)
                             self.buffer = ""
                         elif self.index == len(self.input)-1 and self.accept_state[self.current_state]:
+                            if self.buffer[0] == '0':
+                                raise ArithmeticError(f"Unsupported number: {self.buffer}")
                             self.final_expression.append(float(self.buffer))
                             self.buffer = ""
                 break

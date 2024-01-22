@@ -194,9 +194,11 @@ class Hash(GenericIdentifier):
             raise ArithmeticError(f"hash of a negative param: {param}#")
         if param == 0:
             return 0
-        if param >= float('inf') or  param <= float('-inf'):
+        if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"hash too large param: inf#")
         list_operand = list(str(param))
+        if 'e' in list_operand:
+            return sum(float(list_operand[char]) for char in range(list_operand.index('e')) if list_operand[char].isnumeric())
         return sum(float(char) for char in list_operand if char.isnumeric())
 
 
@@ -233,7 +235,7 @@ class Plus(GenericIdentifier):
         super().__init__('+',1)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1:float, p2:float) -> float:
         """
 
         :param p1: operand float

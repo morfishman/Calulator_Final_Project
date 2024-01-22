@@ -1,6 +1,6 @@
-from src.TransitionKind import TransitionKind
+from TransitionKind import TransitionKind
 from Operators_Claster import *
-
+from Exeptions import SyntaxExpretionExeption
 
 def is_space(char: str):
     """
@@ -186,6 +186,8 @@ def from_str_to_num(buffer:str,farsh = 2):
     :param fresh: none useble element for polymorephizem
     :return: the new number from the buffer
     """
+    if buffer[0] == '0':
+        raise ArithmeticError(f"Unsupported number: {buffer}")
     return float(buffer)
 
 class FsmTable:
