@@ -21,7 +21,9 @@ class TransitionKind(Enum):
     INT_T = 14
     SPACE = 15
     UNARY_MINUS_FIRST_SIC = 16
-
+    E_NUMBER = 17
+    E_NUMBER_OPERATOR = 18
+    E_NUMBER_OPERATOR_NUMBER = 19
 
 
 

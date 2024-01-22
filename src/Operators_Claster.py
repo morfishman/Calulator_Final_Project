@@ -1,7 +1,9 @@
 import math
+
+
 class GenericIdentifier:
 
-    def __init__(self, value: str,priority: int):
+    def __init__(self, value: str, priority: int):
         """
         :param value: gets string value,of the Identifier
         :param priority: the priority of the operator
@@ -13,14 +15,14 @@ class GenericIdentifier:
 
 
 class Braket(GenericIdentifier):
-    def __init__(self, value: str,priority: int,side: int):
+    def __init__(self, value: str, priority: int, side: int):
         """
         :param value: gets string value,of the Identifier
         :param priority: the priority of the operator
         :param side: the side of the braket 0 == ( , 1 == )
         :returns new object of generic operator
         """
-        super().__init__(value,priority)
+        super().__init__(value, priority)
         self.side = side
         self.unary = True
 
@@ -30,7 +32,7 @@ class LBraket(Braket):
         """
         :returns new L bracket element
         """
-        super().__init__('(', 0,0)
+        super().__init__('(', 0, 0)
 
 
 class RBraket(Braket):
@@ -38,7 +40,7 @@ class RBraket(Braket):
         """
         :returns new R bracket element
         """
-        super().__init__(')', 10,1)
+        super().__init__(')', 10, 1)
 
 
 class UnaryMinus(GenericIdentifier):
@@ -48,7 +50,8 @@ class UnaryMinus(GenericIdentifier):
         """
         super().__init__('-', 3.5)
         self.unary = True
-    def calc(self,param:float) -> float:
+
+    def calc(self, param: float) -> float:
         """
         :param param:
         :return: flip the sign of a float param
@@ -57,13 +60,12 @@ class UnaryMinus(GenericIdentifier):
 
         if type(param) != float:
             raise OverflowError(f"Max Num Exided from {param}")
-        if param >= float('inf') or param<=float('-inf'):
+        if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"Max Num Exided from {param}")
-        returnal = 0.0-param
+        returnal = 0.0 - param
         if type(returnal) != float:
             raise OverflowError(f"Max Num Exided from {-param}")
         return returnal
-
 
 
 class MaxUnaryMinus(GenericIdentifier):
@@ -71,9 +73,10 @@ class MaxUnaryMinus(GenericIdentifier):
         """
         :returns new Minus Max Unary Operator (when the minus is after operator)
         """
-        super().__init__('-',7)
+        super().__init__('-', 7)
         self.unary = True
-    def calc(self,param:float) -> float:
+
+    def calc(self, param: float) -> float:
         """
         :param param:
         :return: flip the sign of a float param
@@ -81,13 +84,12 @@ class MaxUnaryMinus(GenericIdentifier):
         """
         if type(param) != float:
             raise OverflowError(f"Max Num Exided from {param}")
-        if param >= float('inf') or param<=float('-inf'):
+        if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"Max Num Exided from {param}")
         returnal = 0.0 - param
         if type(returnal) != float:
             raise OverflowError(f"Max Num Exided from {-param}")
         return returnal
-
 
 
 class Int(GenericIdentifier):
@@ -95,9 +97,10 @@ class Int(GenericIdentifier):
         """
         :returns new Int Operator
         """
-        super().__init__('int',6)
+        super().__init__('int', 6)
         self.unary = True
-    def calc(self,param:float) -> float:
+
+    def calc(self, param: float) -> float:
         """
         :param param:
         :return: remove the digits after the point
@@ -105,21 +108,23 @@ class Int(GenericIdentifier):
         """
         if type(param) != float:
             raise OverflowError(f"Max Num Exided from {param}")
-        if param >= float('inf') or param<=float('-inf'):
+        if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"Max Num Exided from {param}")
         returnal = float(int(param))
         if type(returnal) != float:
             raise OverflowError(f"Max Num Exided from {-param}")
         return returnal
 
+
 class Tilda(GenericIdentifier):
     def __init__(self):
         """
         :returns new Tilda Operator
         """
-        super().__init__('~',6)
+        super().__init__('~', 6)
         self.unary = True
-    def calc(self,param:float) -> float:
+
+    def calc(self, param: float) -> float:
         """
         :param param:
         :return: flip the sign of a float param
@@ -127,22 +132,23 @@ class Tilda(GenericIdentifier):
         """
         if type(param) != float:
             raise OverflowError(f"Max Num Exided from {param}")
-        if param >= float('inf') or param<=float('-inf'):
+        if param >= float('inf') or param <= float('-inf'):
             raise OverflowError(f"Max Num Exided from {param}")
         returnal = 0.0 - param
         if type(returnal) != float:
             raise OverflowError(f"Max Num Exided from {-param}")
         return returnal
 
+
 class Atzeret(GenericIdentifier):
     def __init__(self):
         """
         :returns new Atzeret Operator
         """
-        super().__init__('!',6)
+        super().__init__('!', 6)
         self.unary = True
 
-    def calc(self, param:float) -> float:
+    def calc(self, param: float) -> float:
         """
         :param param: float number
         :return: the value of the factorial of the param
@@ -155,12 +161,12 @@ class Atzeret(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {param}")
         if int(param) < 0:
             raise ArithmeticError(f"factorial of a negative param: {param}!")
-        if param*10%10 != 0:
+        if param * 10 % 10 != 0:
             raise ArithmeticError(f"factorial of a uncomplete param: {param}!")
-        if int(param)  == 0:
+        if int(param) == 0:
             return float(1)
         sum = 1
-        for i in range(1, int(param)+1):
+        for i in range(1, int(param) + 1):
             sum *= float(i)
             round(sum, 10)
             if type(sum) != float or (sum >= float('inf') or sum <= float('-inf')):
@@ -168,16 +174,15 @@ class Atzeret(GenericIdentifier):
         return sum
 
 
-
 class Hash(GenericIdentifier):
     def __init__(self):
         """
         :returns new Hash Operator
         """
-        super().__init__('#',6)
+        super().__init__('#', 6)
         self.unary = True
 
-    def calc(self, param:float) -> float:
+    def calc(self, param: float) -> float:
 
         """
         :param param: float number
@@ -198,7 +203,8 @@ class Hash(GenericIdentifier):
             raise OverflowError(f"hash too large param: inf#")
         list_operand = list(str(param))
         if 'e' in list_operand:
-            return sum(float(list_operand[char]) for char in range(list_operand.index('e')) if list_operand[char].isnumeric())
+            return sum(
+                float(list_operand[char]) for char in range(list_operand.index('e')) if list_operand[char].isnumeric())
         return sum(float(char) for char in list_operand if char.isnumeric())
 
 
@@ -206,10 +212,12 @@ class Minus(GenericIdentifier):
     """
     :returns new Minus Binery Operator
     """
+
     def __init__(self):
-        super().__init__('-',1)
+        super().__init__('-', 1)
         self.unary = False
-    def calc(self,p1:float,p2:float) -> float:
+
+    def calc(self, p1: float, p2: float) -> float:
         """
 
         :param p1: operand float
@@ -232,10 +240,10 @@ class Plus(GenericIdentifier):
         """
         :returns new Plus Binery Operator
         """
-        super().__init__('+',1)
+        super().__init__('+', 1)
         self.unary = False
 
-    def calc(self, p1:float, p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
 
         :param p1: operand float
@@ -252,15 +260,16 @@ class Plus(GenericIdentifier):
 
         return p1 + p2
 
+
 class Mul(GenericIdentifier):
     def __init__(self):
         """
         :returns new Mul Binery Operator
         """
-        super().__init__('*',2)
+        super().__init__('*', 2)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
         :param p1: operand float
         :param p2:  operand float
@@ -278,15 +287,16 @@ class Mul(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p1}*{p2}")
         return returnal
 
+
 class Div(GenericIdentifier):
     def __init__(self):
         """
         :returns new Div Binery Operator
         """
-        super().__init__('/',2)
+        super().__init__('/', 2)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
 
         :param p1: operand float
@@ -308,14 +318,16 @@ class Div(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p1}/{p2}")
         return returnal
 
+
 class Min(GenericIdentifier):
     def __init__(self):
         """
         :returns new Min Binery Operator
         """
-        super().__init__('&',5)
+        super().__init__('&', 5)
         self.unary = False
-    def calc(self,p1:float,p2:float) -> float:
+
+    def calc(self, p1: float, p2: float) -> float:
         """
 
         :param p1: operand
@@ -329,17 +341,18 @@ class Min(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p2}")
         if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
             raise OverflowError(f"Max Num Exided")
-        return min(p1 ,p2)
+        return min(p1, p2)
+
 
 class Power(GenericIdentifier):
     def __init__(self):
         """
         :returns new Power Binary Operator
         """
-        super().__init__('^',3)
+        super().__init__('^', 3)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
         :param p1: operand
         :param p2: operand
@@ -354,15 +367,15 @@ class Power(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p2}")
         if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
             raise OverflowError(f"Max Num Exided")
-        if p1 == 0  and p2 < 0:
+        if p1 == 0 and p2 < 0:
             raise ZeroDivisionError(f"cant devide by zero {p1}^{p2} = {p1}/{p2}")
-        if p1<0 and p2*10%10 != 0:
+        if p1 < 0 and p2 * 10 % 10 != 0:
             raise ArithmeticError(f"sqrt of negative number {p1}^{p2}")
         try:
-            returnal = math.pow(p1,p2)
+            returnal = math.pow(p1, p2)
         except OverflowError as e:
             raise OverflowError(f"Max Num Exided from {p1}^{p2}")
-        if type(returnal) != float or not float('-inf') < returnal < float('inf') :
+        if type(returnal) != float or not float('-inf') < returnal < float('inf'):
             raise OverflowError(f"Max Num Exided from {p1}^{p2}")
         return returnal
 
@@ -372,10 +385,10 @@ class Avg(GenericIdentifier):
         """
         :returns new Avg Binary Operator
         """
-        super().__init__('@',5)
+        super().__init__('@', 5)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
 
         :param p1: Operand
@@ -394,15 +407,16 @@ class Avg(GenericIdentifier):
             raise OverflowError(f"Max Num Exided")
         return returnal
 
+
 class Max(GenericIdentifier):
     def __init__(self):
         """
         :returns new Max Binary Operator
         """
-        super().__init__('$',5)
+        super().__init__('$', 5)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
         :param p1: Operand
         :param p2: Operand
@@ -415,17 +429,18 @@ class Max(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p2}")
         if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
             raise OverflowError(f"Max Num Exided")
-        return max(p1,p2)
+        return max(p1, p2)
+
 
 class Mod(GenericIdentifier):
     def __init__(self):
         """
         :returns new Mod Binary Operator
         """
-        super().__init__('%',4)
+        super().__init__('%', 4)
         self.unary = False
 
-    def calc(self,p1:float,p2:float) -> float:
+    def calc(self, p1: float, p2: float) -> float:
         """
         :param p1:Operand
         :param p2: Operand
@@ -439,9 +454,9 @@ class Mod(GenericIdentifier):
             raise OverflowError(f"Max Num Exided from {p2}")
         if not float('-inf') < p1 < float('inf') or not float('-inf') < p2 < float('inf'):
             raise OverflowError(f"Max Num Exided")
-        if p2 ==0:
+        if p2 == 0:
             raise ZeroDivisionError("cant divide by zero")
         returnal = p1 % p2
-        if type(returnal) != float or not float('-inf') < returnal < float('inf') :
+        if type(returnal) != float or not float('-inf') < returnal < float('inf'):
             raise OverflowError(f"Max Num Exided from {p1}%{p2}")
         return returnal
